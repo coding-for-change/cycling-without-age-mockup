@@ -16,13 +16,16 @@
   --ink-soft: 24 8% 36%;
   --line: 30 18% 87%;
 
-  /* --- the colour family (flat pastel blocks + a saturated ink twin) --- */
+  /* --- the colour family (flat pastel blocks + a saturated ink twin) ---
+     `rose` and `mint` are the two corporate colours: the logo red and #92CBBE.
+     Everything positive/calm in the apps rides on the mint family, so the
+     corporate teal shows up in rings, bars, week strip, seats and the SVG art. */
   --sun: 43 96% 60%;   --sun-bg: 43 96% 86%;   --sun-ink: 32 82% 26%;
-  --mint: 156 52% 48%; --mint-bg: 154 54% 86%; --mint-ink: 162 68% 20%;
+  --mint: 166 36% 68%; --mint-bg: 166 44% 90%; --mint-ink: 172 48% 22%;  /* --mint = #92CBBE */
   --sky: 204 88% 60%;  --sky-bg: 204 88% 89%;  --sky-ink: 209 82% 26%;
   --lav: 264 62% 66%;  --lav-bg: 265 70% 91%;  --lav-ink: 266 48% 30%;
   --peach: 16 92% 66%; --peach-bg: 18 94% 89%; --peach-ink: 12 72% 30%;
-  --rose: 352 89% 43%; --rose-bg: 352 80% 93%; --rose-ink: 352 70% 30%;
+  --rose: 357 84% 47%; --rose-bg: 357 82% 94%; --rose-ink: 356 70% 32%;  /* the logo red, kept dark enough for white type */
 
   --r-card: 1.25rem;
   --r-tile: 1.5rem;
@@ -165,7 +168,7 @@ body.senior .tile-foot { font-size: 0.875rem; }
 .btn-ink { background: hsl(var(--ink)); color: hsl(0 0% 100%); }
 .btn-ink:hover { background: hsl(var(--ink) / 0.88); }
 .btn-sun { background: hsl(var(--sun)); color: hsl(var(--sun-ink)); }
-.btn-mint { background: hsl(var(--mint)); color: white; }
+.btn-mint { background: hsl(var(--mint)); color: hsl(var(--mint-ink)); }
 
 /* the signature CTA: label pill + solid circle with an arrow (see inspiration) */
 .btn-hero {
@@ -237,15 +240,28 @@ body.senior .icon-pill { width: 3.25rem; height: 3.25rem; }
 body.senior .hero-head-title { font-size: 1.1875rem; }
 body.senior .hero-head-sub { font-size: 0.875rem; }
 
+/* the logo, on a white plate ringed in the corporate teal */
 .brand-dot {
-  width: 2.25rem; height: 2.25rem; flex: none;
-  border-radius: 999px;
-  background: hsl(var(--rose));
-  color: white;
+  width: 2.5rem; height: 2.25rem; flex: none;
+  border-radius: 0.7rem;
+  background: hsl(0 0% 100%);
+  box-shadow: inset 0 0 0 1.5px hsl(var(--mint));
   display: flex; align-items: center; justify-content: center;
+  padding: 0.2rem 0.25rem;
 }
-.brand-dot svg.icon { width: 1.2rem; height: 1.2rem; }
-body.senior .brand-dot { width: 2.75rem; height: 2.75rem; }
+.brand-dot img { width: 100%; height: 100%; object-fit: contain; }
+body.senior .brand-dot { width: 3rem; height: 2.75rem; }
+
+/* logo + wordmark, for splash/login screens */
+.brand-lockup { display: inline-flex; align-items: center; gap: 0.6rem; }
+.brand-lockup img { height: 2.25rem; width: auto; }
+.brand-lockup span {
+  font-family: var(--font-display); font-weight: 800;
+  letter-spacing: -0.02em; font-size: 1rem; line-height: 1.1;
+  max-width: 7.5rem;
+}
+body.senior .brand-lockup img { height: 2.75rem; }
+body.senior .brand-lockup span { font-size: 1.125rem; max-width: 8.5rem; }
 
 /* notification bell with a live dot */
 .bell {
@@ -453,7 +469,7 @@ body.senior .weather { font-size: 0.9375rem; }
   animation: ping 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 .passkey-orb::after { animation-delay: 0.7s; }
-.passkey-orb.ok { background: hsl(var(--mint)); }
+.passkey-orb.ok { background: hsl(var(--mint)); color: hsl(var(--mint-ink)); }
 .passkey-orb.ok::before, .passkey-orb.ok::after { display: none; }
 
 .otp-row { display: flex; gap: 0.5rem; justify-content: center; }

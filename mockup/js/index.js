@@ -94,7 +94,7 @@ CWA.reg({
       '<div class="launch stack-xl">' +
 
       '<div class="between">' +
-      '<div class="row"><div class="brand-dot">' + CWA.icon('bike') + '</div>' +
+      '<div class="row">' + CWA.ui.brandDot() +
       '<div><div class="hero-head-title">' + esc(t('brand')) + '</div>' +
       '<div class="hero-head-sub">' + esc(t('idx.kicker')) + '</div></div></div>' +
       CWA.ui.langSeg() +

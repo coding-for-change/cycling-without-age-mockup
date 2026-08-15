@@ -115,6 +115,7 @@
       if (st.stage === 'passkey' || st.stage === 'ok') { verifying(); return; }
       cfg.setHtml(
         '<div class="auth-screen">' +
+        '<div style="padding:.25rem 0 .5rem">' + CWA.ui.brandLockup() + '</div>' +
         '<div class="auth-art reveal">' + CWA.art.hero(cfg.art) + '</div>' +
         '<div class="stack-lg grow" style="justify-content:flex-start">' +
         '<div class="stack-sm reveal" style="--i:1">' +

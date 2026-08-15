@@ -169,7 +169,7 @@
     const side =
       '<aside class="sidebar">' +
       '<div class="sidebar-header">' +
-      '<div class="icon-tile icon-tile-sm">' + CWA.icon('bike') + '</div>' +
+      '<div class="sidebar-logo"><img src="assets/logo.png" alt=""></div>' +
       '<div class="grow"><div class="medium" style="font-size:.9375rem">' + esc(CWA.t('brand')) + '</div>' +
       '<div class="tiny muted">' + esc(o.subtitle || '') + '</div></div></div>' +
       o.groups.map(function (g) {
@@ -329,7 +329,12 @@
   };
 
   CWA.ui.brandDot = function () {
-    return '<div class="brand-dot">' + CWA.icon('bike') + '</div>';
+    return '<div class="brand-dot"><img src="assets/logo.png" alt=""></div>';
+  };
+
+  CWA.ui.brandLockup = function () {
+    return '<div class="brand-lockup"><img src="assets/logo.png" alt="">' +
+      '<span>' + esc(CWA.t('brand')) + '</span></div>';
   };
 
   CWA.ui.bell = function (hasNew) {

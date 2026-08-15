@@ -1,0 +1,62 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e6]:
+      - generic [ref=e7]: Cycling Without Age
+      - generic [ref=e8]: Booking platform · design prototype
+    - group "Language" [ref=e9]:
+      - button "EN" [ref=e10] [cursor=pointer]
+      - button "DE" [ref=e11] [cursor=pointer]
+      - button "DA" [ref=e12] [cursor=pointer]
+  - generic [ref=e14]:
+    - generic [ref=e15]: Give someone the wind in their hair.
+    - paragraph [ref=e16]: A clickable prototype of the new Cycling Without Age booking system — four real roles, one shared live database. Everything you do in one role shows up in the others.
+  - generic [ref=e17]:
+    - generic [ref=e18]:
+      - generic [ref=e19]: Passenger app
+      - paragraph [ref=e26]: Maria, 85 · books a ride in five big, simple steps
+      - generic [ref=e27]:
+        - link "Open" [ref=e28] [cursor=pointer]:
+          - /url: passenger.html
+        - button "Start at the sign-in screen" [ref=e31] [cursor=pointer]
+    - generic [ref=e34]:
+      - generic [ref=e35]: Pilot app
+      - paragraph [ref=e44]: Jonas · takes open rides, checks in, files the debrief
+      - generic [ref=e45]:
+        - link "Open" [ref=e46] [cursor=pointer]:
+          - /url: pilot.html
+        - button "Start at the sign-in screen" [ref=e49] [cursor=pointer]
+    - generic [ref=e52]:
+      - generic [ref=e53]: Chapter admin
+      - paragraph [ref=e62]: Petra runs München — switch to the super-admin role inside
+      - link "Open" [ref=e64] [cursor=pointer]:
+        - /url: admin.html
+    - generic [ref=e67]:
+      - generic [ref=e68]: WhatsApp bot
+      - paragraph [ref=e75]: Booking a ride without any app at all
+      - link "Open" [ref=e77] [cursor=pointer]:
+        - /url: whatsapp.html
+  - generic [ref=e80]:
+    - generic [ref=e81]: The 3-minute demo
+    - generic [ref=e86]:
+      - generic [ref=e87]:
+        - generic [ref=e88]: "1"
+        - generic [ref=e89]: Open the Passenger app and book a ride as Maria.
+      - generic [ref=e90]:
+        - generic [ref=e91]: "2"
+        - generic [ref=e92]: Open the Pilot app — a push notification announces the new ride. Grab it.
+      - generic [ref=e93]:
+        - generic [ref=e94]: "3"
+        - generic [ref=e95]: A chat opens on both sides. Send a message and watch it arrive.
+      - generic [ref=e96]:
+        - generic [ref=e97]: "4"
+        - generic [ref=e98]: "On ride day: check in, ride, and file the 30-second debrief."
+      - generic [ref=e99]:
+        - generic [ref=e100]: "5"
+        - generic [ref=e101]: Watch the Chapter admin dashboard follow every step live.
+  - generic [ref=e105]:
+    - generic [ref=e106]: "Open two browser windows side by side (Passenger + Pilot) to see live sync and push notifications. Cross-window sync needs this folder served, for example:"
+    - code [ref=e107]: python3 -m http.server -d mockup 8000
+    - generic [ref=e108]: Every screen is fully translated — English, Deutsch, Dansk.
+  - generic [ref=e109]:
+    - generic [ref=e110]: Restores the original demo state in every role
+    - button "Reset demo data" [ref=e111] [cursor=pointer]
