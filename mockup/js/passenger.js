@@ -82,6 +82,7 @@ CWA.reg({
     'pax.editAccount': 'Your details',
     'pax.savedToast': 'Your details are saved',
     'pax.notifsHint': 'A message when your ride is confirmed.',
+    'pax.notif.empty': 'No notifications for now',
     'pax.demoHome': 'Demo home',
 
     'pax.goodMorning': 'Good morning, {name}!',
@@ -221,6 +222,7 @@ CWA.reg({
     'pax.editAccount': 'Ihre Angaben',
     'pax.savedToast': 'Ihre Angaben sind gespeichert',
     'pax.notifsHint': 'Eine Nachricht, wenn Ihre Fahrt bestätigt ist.',
+    'pax.notif.empty': 'Im Moment keine Benachrichtigungen',
     'pax.demoHome': 'Demo-Startseite',
 
     'pax.goodMorning': 'Guten Morgen, {name}!',
@@ -360,6 +362,7 @@ CWA.reg({
     'pax.editAccount': 'Dine oplysninger',
     'pax.savedToast': 'Dine oplysninger er gemt',
     'pax.notifsHint': 'En besked når din tur er bekræftet.',
+    'pax.notif.empty': 'Ingen notifikationer lige nu',
     'pax.demoHome': 'Demo-forside',
 
     'pax.goodMorning': 'Godmorgen, {name}!',
@@ -478,8 +481,44 @@ CWA.reg({
     viewEl.style.flex = opts.chat ? '1' : '';
     viewEl.style.minHeight = opts.chat ? '0' : '';
     viewEl.innerHTML = html;
+    var bell = viewEl.querySelector('#bell-btn');
+    if (bell) bell.addEventListener('click', notifModal);
     applyChrome();
     ui.bindStickyHead();
+  }
+
+  /* -------------------------- notifications sheet -------------------------- */
+  var NOTIF_ICON = {
+    'notif.pilotAssigned': 'bike', 'notif.scheduled': 'calendar',
+    'notif.cancelled': 'x', 'notif.message': 'chat'
+  };
+  function myNotifs() {
+    return db().notifications
+      .filter(function (n) { return n.audience === 'client:' + session.userId; })
+      .slice()
+      .sort(function (a, b) { return b.ts - a.ts; });
+  }
+  function hasFreshNotifs() {
+    return myNotifs().some(function (n) { return n.ts > Date.now() - 864e5; });
+  }
+  function notifModal() {
+    var list = myNotifs().slice(0, 8);
+    var body = list.length
+      ? '<div class="stack">' + list.map(function (n) {
+        return '<button type="button" class="record-card row-lg"' +
+          (n.hash ? ' data-nav="' + esc(n.hash) + '"' : '') + ' data-close>' +
+          '<div class="icon-tile icon-tile-sm on-mint">' + CWA.icon(NOTIF_ICON[n.tKey] || 'bell') + '</div>' +
+          '<div class="grow"><div class="small semibold">' + esc(t(n.tKey + '.t', n.params)) + '</div>' +
+          '<div class="tiny muted">' + esc(t(n.tKey + '.b', n.params)) + '</div></div>' +
+          '<span class="tiny muted">' + esc(CWA.fmt.rel(n.ts)) + '</span></button>';
+      }).join('') + '</div>'
+      : '<div class="empty-state"><div class="icon-tile">' + CWA.icon('bell') + '</div>' +
+      '<div>' + esc(t('pax.notif.empty')) + '</div></div>';
+
+    ui.modal('<div class="stack">' +
+      '<div class="between"><div class="h2">' + esc(t('common.notifications')) + '</div>' +
+      '<button type="button" class="icon-btn" data-close aria-label="' + esc(t('common.close')) + '">' + CWA.icon('x') + '</button></div>' +
+      body + '</div>');
   }
   function applyChrome() {
     var tb = document.querySelector('#tabbar-slot .tabbar');
@@ -939,20 +978,6 @@ CWA.reg({
     }, 1000);
   }
 
-  function storyCard(d) {
-    var list = d.stories || [];
-    if (!list.length) return '';
-    /* one story a day, stable within the day */
-    var s = list[new Date().getDate() % list.length];
-    return '<div class="quote stack-sm">' +
-      '<div class="quote-mark">&ldquo;</div>' +
-      '<div class="quote-text">' + esc(t(s.tKey)) + '</div>' +
-      '<div class="row">' + art.avatar(s.author) +
-      '<div><div class="small semibold">' + esc(s.author) + '</div>' +
-      '<div class="tiny" style="opacity:.7">' + esc(t('story.' + s.role)) + '</div></div></div>' +
-      '</div>';
-  }
-
   function home() {
     lastView = 'home';
     var d = db();
@@ -982,7 +1007,7 @@ CWA.reg({
         lead: art.avatar(client.name, 'av-lg'),
         title: esc(t(greetKey, { name: client.name.split(' ')[0] })),
         sub: esc(CWA.fmt.dateLong(Date.now())),
-        right: ui.bell(false)
+        right: ui.bell(hasFreshNotifs())
       }) +
       '<div class="app-body stack-lg">' +
 
@@ -1035,9 +1060,6 @@ CWA.reg({
         ui.sectionHead(t('pax.eventsTitle'), t('pax.allEvents'), '#events') +
         '<div class="rail">' + events.slice(0, 4).map(function (r) { return eventCard(r, d); }).join('') + '</div>' +
         '</div>' : '') +
-
-      /* — why any of this exists — */
-      '<div' + rev() + '>' + storyCard(d) + '</div>' +
 
       /* — a human being, one tap away — */
       '<div class="card stack"' + rev() + '>' +
@@ -1651,7 +1673,7 @@ CWA.reg({
       /* (d) settings */
       '<div class="card stack reveal" style="--i:3">' +
       '<div class="eyebrow">' + esc(t('common.settings')) + '</div>' +
-      '<div class="between"><span>' + esc(t('common.language')) + '</span>' + ui.langSeg() + '</div>' +
+      '<div class="between"><span>' + esc(t('common.language')) + '</span>' + ui.langMenu() + '</div>' +
       '<div class="between"><div><div>' + esc(t('common.notifications')) + '</div>' +
       '<div class="hint">' + esc(t('pax.notifsHint')) + '</div></div>' +
       '<label class="switch"><input type="checkbox" id="prof-notifs"' + (notifsOn ? ' checked' : '') + '>' +
