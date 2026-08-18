@@ -105,17 +105,13 @@
     function root() { return cfg.root(); }
     function stopTimers() { clearTimeout(fillTimer); }
 
-    function langFoot() {
-      return '<div class="center" style="padding-top:.5rem">' + CWA.ui.langSeg() + '</div>';
-    }
-
     /* ---- #welcome ---- */
     function welcome() {
       stopTimers();
       if (st.stage === 'passkey' || st.stage === 'ok') { verifying(); return; }
       cfg.setHtml(
         '<div class="auth-screen">' +
-        '<div style="padding:.25rem 0 .5rem">' + CWA.ui.brandLockup() + '</div>' +
+        '<div class="between" style="padding:.25rem 0 .5rem">' + CWA.ui.brandLockup() + CWA.ui.langMenu() + '</div>' +
         '<div class="auth-art reveal">' + CWA.art.hero(cfg.art) + '</div>' +
         '<div class="stack-lg grow" style="justify-content:flex-start">' +
         '<div class="stack-sm reveal" style="--i:1">' +
@@ -135,7 +131,7 @@
         '<button type="button" class="btn btn-secondary btn-lg btn-block reveal" style="--i:4" data-nav="' + esc(cfg.signupHash) + '">' +
         CWA.icon('plus') + esc(t(cfg.signupKey)) + '</button>' +
         '<p class="tiny muted center reveal" style="--i:5">' + esc(t(K('auth.terms'))) + '</p>' +
-        '</div>' + langFoot() + '</div>');
+        '</div></div>');
 
       root().querySelector('#pk-btn').addEventListener('click', function () {
         st.stage = 'passkey';

@@ -126,6 +126,8 @@ CWA.reg({
 
     'notif.eventSignup.t': 'New event signup',
     'notif.eventSignup.b': '{name} reserved a seat · {event}',
+    'notif.eventCancel.t': 'Seat cancelled',
+    'notif.eventCancel.b': '{name} gave up their seat · {event}',
 
     /* ---- v3: shared chrome, event content, community, weather, auth ---- */
     'common.continue': 'Continue',
@@ -312,6 +314,8 @@ CWA.reg({
 
     'notif.eventSignup.t': 'Neue Event-Anmeldung',
     'notif.eventSignup.b': '{name} hat einen Platz reserviert · {event}',
+    'notif.eventCancel.t': 'Platz storniert',
+    'notif.eventCancel.b': '{name} hat den Platz storniert · {event}',
 
     /* ---- v3 (Sie-Form; die Pilot·innen-App registriert eigene Du-Varianten) ---- */
     'common.continue': 'Weiter',
@@ -498,6 +502,8 @@ CWA.reg({
 
     'notif.eventSignup.t': 'Ny event-tilmelding',
     'notif.eventSignup.b': '{name} har reserveret en plads · {event}',
+    'notif.eventCancel.t': 'Plads annulleret',
+    'notif.eventCancel.b': '{name} har opgivet sin plads · {event}',
 
     /* ---- v3 ---- */
     'common.continue': 'Fortsæt',

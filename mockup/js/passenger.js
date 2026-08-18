@@ -67,6 +67,11 @@ CWA.reg({
     'pax.reservedToast': 'Your seat is reserved',
     'pax.eventGone': 'This event could not be found.',
     'pax.eventPilots': 'Your pilots on the day',
+    'pax.cancelSeat': 'Cancel my seat',
+    'pax.cancelSeatQ': 'Do you really want to give up your seat?',
+    'pax.cancelSeatYes': 'Yes, cancel my seat',
+    'pax.keepSeat': 'No, keep my seat',
+    'pax.seatCancelledToast': 'Your seat has been cancelled',
 
     'pax.wa.title': 'Booking by WhatsApp',
     'pax.wa.body': 'You can also book by WhatsApp message — no app needed. Want to try?',
@@ -82,6 +87,7 @@ CWA.reg({
     'pax.editAccount': 'Your details',
     'pax.savedToast': 'Your details are saved',
     'pax.notifsHint': 'A message when your ride is confirmed.',
+    'pax.notif.empty': 'No notifications for now',
     'pax.demoHome': 'Demo home',
 
     'pax.goodMorning': 'Good morning, {name}!',
@@ -91,6 +97,8 @@ CWA.reg({
     'pax.nextRide': 'Your next ride',
     'pax.needHelp': 'Do you need help?',
     'pax.helpText': 'Call us. We are happy to help — a person answers.',
+    'pax.bookAgain': 'Book again',
+    'pax.bookAgainHint': 'Same route, new day',
     'pax.q1': 'What kind of ride would you like?',
     'pax.pleasureSub': 'A relaxing ride outside',
     'pax.errandSub': 'To the doctor, shop or hairdresser',
@@ -206,6 +214,11 @@ CWA.reg({
     'pax.reservedToast': 'Ihr Platz ist reserviert',
     'pax.eventGone': 'Dieses Event wurde nicht gefunden.',
     'pax.eventPilots': 'Ihre Pilot·innen an dem Tag',
+    'pax.cancelSeat': 'Platz stornieren',
+    'pax.cancelSeatQ': 'Möchten Sie Ihren Platz wirklich aufgeben?',
+    'pax.cancelSeatYes': 'Ja, Platz stornieren',
+    'pax.keepSeat': 'Nein, Platz behalten',
+    'pax.seatCancelledToast': 'Ihr Platz wurde storniert',
 
     'pax.wa.title': 'Buchen per WhatsApp',
     'pax.wa.body': 'Sie können auch per WhatsApp-Nachricht buchen — ohne App. Möchten Sie es ausprobieren?',
@@ -221,6 +234,7 @@ CWA.reg({
     'pax.editAccount': 'Ihre Angaben',
     'pax.savedToast': 'Ihre Angaben sind gespeichert',
     'pax.notifsHint': 'Eine Nachricht, wenn Ihre Fahrt bestätigt ist.',
+    'pax.notif.empty': 'Im Moment keine Benachrichtigungen',
     'pax.demoHome': 'Demo-Startseite',
 
     'pax.goodMorning': 'Guten Morgen, {name}!',
@@ -230,6 +244,8 @@ CWA.reg({
     'pax.nextRide': 'Ihre nächste Fahrt',
     'pax.needHelp': 'Brauchen Sie Hilfe?',
     'pax.helpText': 'Rufen Sie uns an. Wir helfen Ihnen gerne — es geht ein Mensch ran.',
+    'pax.bookAgain': 'Erneut buchen',
+    'pax.bookAgainHint': 'Gleiche Strecke, neuer Tag',
     'pax.q1': 'Welche Fahrt möchten Sie machen?',
     'pax.pleasureSub': 'Eine entspannte Fahrt an der frischen Luft',
     'pax.errandSub': 'Zum Arzt, zum Einkaufen oder zum Friseur',
@@ -345,6 +361,11 @@ CWA.reg({
     'pax.reservedToast': 'Din plads er reserveret',
     'pax.eventGone': 'Dette event kunne ikke findes.',
     'pax.eventPilots': 'Dine piloter på dagen',
+    'pax.cancelSeat': 'Aflys min plads',
+    'pax.cancelSeatQ': 'Vil du virkelig give afkald på din plads?',
+    'pax.cancelSeatYes': 'Ja, aflys min plads',
+    'pax.keepSeat': 'Nej, behold min plads',
+    'pax.seatCancelledToast': 'Din plads er aflyst',
 
     'pax.wa.title': 'Book via WhatsApp',
     'pax.wa.body': 'Du kan også booke med en WhatsApp-besked — uden app. Vil du prøve?',
@@ -360,6 +381,7 @@ CWA.reg({
     'pax.editAccount': 'Dine oplysninger',
     'pax.savedToast': 'Dine oplysninger er gemt',
     'pax.notifsHint': 'En besked når din tur er bekræftet.',
+    'pax.notif.empty': 'Ingen notifikationer lige nu',
     'pax.demoHome': 'Demo-forside',
 
     'pax.goodMorning': 'Godmorgen, {name}!',
@@ -369,6 +391,8 @@ CWA.reg({
     'pax.nextRide': 'Din næste tur',
     'pax.needHelp': 'Har du brug for hjælp?',
     'pax.helpText': 'Ring til os. Vi hjælper dig gerne — der sidder et menneske i den anden ende.',
+    'pax.bookAgain': 'Book igen',
+    'pax.bookAgainHint': 'Samme rute, ny dag',
     'pax.q1': 'Hvilken slags tur vil du på?',
     'pax.pleasureSub': 'En afslappende tur i det fri',
     'pax.errandSub': 'Til lægen, butikken eller frisøren',
@@ -478,8 +502,44 @@ CWA.reg({
     viewEl.style.flex = opts.chat ? '1' : '';
     viewEl.style.minHeight = opts.chat ? '0' : '';
     viewEl.innerHTML = html;
+    var bell = viewEl.querySelector('#bell-btn');
+    if (bell) bell.addEventListener('click', notifModal);
     applyChrome();
     ui.bindStickyHead();
+  }
+
+  /* -------------------------- notifications sheet -------------------------- */
+  var NOTIF_ICON = {
+    'notif.pilotAssigned': 'bike', 'notif.scheduled': 'calendar',
+    'notif.cancelled': 'x', 'notif.message': 'chat'
+  };
+  function myNotifs() {
+    return db().notifications
+      .filter(function (n) { return n.audience === 'client:' + session.userId; })
+      .slice()
+      .sort(function (a, b) { return b.ts - a.ts; });
+  }
+  function hasFreshNotifs() {
+    return myNotifs().some(function (n) { return n.ts > Date.now() - 864e5; });
+  }
+  function notifModal() {
+    var list = myNotifs().slice(0, 8);
+    var body = list.length
+      ? '<div class="stack">' + list.map(function (n) {
+        return '<button type="button" class="record-card row-lg"' +
+          (n.hash ? ' data-nav="' + esc(n.hash) + '"' : '') + ' data-close>' +
+          '<div class="icon-tile icon-tile-sm on-mint">' + CWA.icon(NOTIF_ICON[n.tKey] || 'bell') + '</div>' +
+          '<div class="grow"><div class="small semibold">' + esc(t(n.tKey + '.t', n.params)) + '</div>' +
+          '<div class="tiny muted">' + esc(t(n.tKey + '.b', n.params)) + '</div></div>' +
+          '<span class="tiny muted">' + esc(CWA.fmt.rel(n.ts)) + '</span></button>';
+      }).join('') + '</div>'
+      : '<div class="empty-state"><div class="icon-tile">' + CWA.icon('bell') + '</div>' +
+      '<div>' + esc(t('pax.notif.empty')) + '</div></div>';
+
+    ui.modal('<div class="stack">' +
+      '<div class="between"><div class="h2">' + esc(t('common.notifications')) + '</div>' +
+      '<button type="button" class="icon-btn" data-close aria-label="' + esc(t('common.close')) + '">' + CWA.icon('x') + '</button></div>' +
+      body + '</div>');
   }
   function applyChrome() {
     var tb = document.querySelector('#tabbar-slot .tabbar');
@@ -498,6 +558,20 @@ CWA.reg({
     return !!m && m.from !== 'client' && m.from !== 'system';
   }
   function isActiveRide(r) { return r.status !== 'done' && r.status !== 'cancelled'; }
+
+  /* Completed rides, most recent first, deduped by route — the shortlist
+     offered by "Book again" so a repeat trip skips straight to picking a day. */
+  function pastRideOptions(d) {
+    var seen = {};
+    return d.rides.filter(function (r) {
+      return r.clientId === session.userId && r.status === 'done';
+    }).sort(function (a, b) { return b.ts - a.ts; }).filter(function (r) {
+      var key = r.type + '|' + r.pickup + '|' + (r.destination || '');
+      if (seen[key]) return false;
+      seen[key] = true;
+      return true;
+    }).slice(0, 3);
+  }
 
   function anyUnread() {
     var d = db();
@@ -797,6 +871,21 @@ CWA.reg({
     CWA.ui.toast(t('pax.reservedToast'), 'success');
   }
 
+  function cancelSeat(id) {
+    var d0 = db();
+    var title = eventTitle(find(d0.rides, id), d0);
+    CWA.store.update(function (d) {
+      var r = find(d.rides, id);
+      if (!r || !r.roster) return;
+      var mineSlot = r.roster.filter(function (x) { return x.name === session.name; })[0];
+      if (!mineSlot) return;
+      mineSlot.name = null;
+      mineSlot.order = null;
+      CWA.store.notify(d, 'admin', 'notif.eventCancel', { name: session.name, event: title }, '#events/' + id);
+    });
+    CWA.ui.toast(t('pax.seatCancelledToast'), 'info');
+  }
+
   /* compact card used on the home rail and the events list */
   function eventCard(r, d) {
     var s = ui.eventSeats(r);
@@ -908,12 +997,28 @@ CWA.reg({
         : seats.free
           ? heroBtn('data-reserve="' + esc(r.id) + '"', t('pax.reserveSeat'), t('pax.seatsFree', { free: seats.free, total: seats.total }), 'armchair', 'on-rose')
           : '<div class="alert alert-amber">' + CWA.icon('info') + '<div>' + esc(t('pax.eventFull')) + '</div></div>') +
+      (mine ? '<button type="button" class="btn btn-destructive-outline btn-xl btn-block" id="seat-cancel">' +
+        CWA.icon('x') + esc(t('pax.cancelSeat')) + '</button>' : '') +
       '<a class="btn btn-outline btn-lg btn-block" href="tel:' + esc(chapter.phone.replace(/\s+/g, '')) + '">' +
       CWA.icon('phone') + esc(t('common.help')) + '</a>' +
       '</div>' +
 
       '</div>');
     bindReserve();
+
+    var seatCancelBtn = viewEl.querySelector('#seat-cancel');
+    if (seatCancelBtn) seatCancelBtn.addEventListener('click', function () {
+      var m = CWA.ui.modal(
+        '<div class="stack-lg">' +
+        '<div class="display display-sm">' + esc(t('pax.cancelSeatQ')) + '</div>' +
+        '<button type="button" class="btn btn-destructive btn-xl btn-block" id="seat-cancel-yes">' + esc(t('pax.cancelSeatYes')) + '</button>' +
+        '<button type="button" class="btn btn-outline btn-xl btn-block" data-close>' + esc(t('pax.keepSeat')) + '</button>' +
+        '</div>');
+      m.el.querySelector('#seat-cancel-yes').addEventListener('click', function () {
+        cancelSeat(id);
+        m.close();
+      });
+    });
   }
 
   function bindReserve() {
@@ -937,20 +1042,6 @@ CWA.reg({
         '<button type="button" class="btn btn-outline btn-xl btn-block" data-close>' + esc(t('pax.wa.keep')) + '</button>' +
         '</div>');
     }, 1000);
-  }
-
-  function storyCard(d) {
-    var list = d.stories || [];
-    if (!list.length) return '';
-    /* one story a day, stable within the day */
-    var s = list[new Date().getDate() % list.length];
-    return '<div class="quote stack-sm">' +
-      '<div class="quote-mark">&ldquo;</div>' +
-      '<div class="quote-text">' + esc(t(s.tKey)) + '</div>' +
-      '<div class="row">' + art.avatar(s.author) +
-      '<div><div class="small semibold">' + esc(s.author) + '</div>' +
-      '<div class="tiny" style="opacity:.7">' + esc(t('story.' + s.role)) + '</div></div></div>' +
-      '</div>';
   }
 
   function home() {
@@ -982,7 +1073,7 @@ CWA.reg({
         lead: art.avatar(client.name, 'av-lg'),
         title: esc(t(greetKey, { name: client.name.split(' ')[0] })),
         sub: esc(CWA.fmt.dateLong(Date.now())),
-        right: ui.bell(false)
+        right: ui.bell(hasFreshNotifs())
       }) +
       '<div class="app-body stack-lg">' +
 
@@ -1035,9 +1126,6 @@ CWA.reg({
         ui.sectionHead(t('pax.eventsTitle'), t('pax.allEvents'), '#events') +
         '<div class="rail">' + events.slice(0, 4).map(function (r) { return eventCard(r, d); }).join('') + '</div>' +
         '</div>' : '') +
-
-      /* — why any of this exists — */
-      '<div' + rev() + '>' + storyCard(d) + '</div>' +
 
       /* — a human being, one tap away — */
       '<div class="card stack"' + rev() + '>' +
@@ -1145,7 +1233,31 @@ CWA.reg({
     /* ---- step bodies ---- */
     var body = '';
     if (s.step === 1) {
+      var d0 = db();
+      var events = myEvents(d0, me(d0)).slice(0, 3);
+      var again = pastRideOptions(d0);
+      var hasShortcuts = events.length || again.length;
       body =
+        (events.length ?
+          '<div class="stack-sm reveal">' +
+          ui.sectionHead(t('pax.eventsTitle'), t('pax.allEvents'), '#events') +
+          '<div class="rail">' + events.map(function (r) { return eventCard(r, d0); }).join('') + '</div>' +
+          '</div>' : '') +
+        (again.length ?
+          '<div class="stack-sm reveal">' +
+          '<div class="eyebrow">' + esc(t('pax.bookAgain')) + '</div>' +
+          '<div class="hint" style="margin-top:-.25rem">' + esc(t('pax.bookAgainHint')) + '</div>' +
+          again.map(function (r) {
+            return '<button type="button" class="record-card row-lg" data-again="' + esc(r.id) + '">' +
+              '<div class="icon-tile icon-tile-sm on-' + (r.type === 'functional' ? 'sky' : 'rose') + '">' +
+              CWA.icon(r.type === 'functional' ? 'route' : 'heart') + '</div>' +
+              '<div class="grow"><div class="medium">' + esc(r.destination ? r.pickup + ' → ' + r.destination : r.pickup) + '</div>' +
+              '<div class="hint">' + esc(t('type.' + r.type)) + ' · ' + esc(CWA.fmt.date(r.ts)) + '</div></div>' +
+              '<span class="link-card-chevron">' + CWA.icon('chevronRight') + '</span></button>';
+          }).join('') + '</div>' : '') +
+        (hasShortcuts ?
+          '<div class="row"><span class="divider grow"></span><span class="tiny muted">' + esc(t('auth.or')) + '</span><span class="divider grow"></span></div>'
+          : '') +
         '<div class="wizard-question display display-sm">' + esc(t('pax.q1')) + '</div>' +
         '<div class="stack">' +
         bigOpt('heart', t('type.pleasure'), t('pax.pleasureSub'), 'data-type="pleasure"', s.type === 'pleasure', 'rose') +
@@ -1229,6 +1341,21 @@ CWA.reg({
     viewEl.querySelectorAll('[data-type]').forEach(function (b) {
       b.addEventListener('click', function () { s.type = b.getAttribute('data-type'); s.step = 2; CWA.render(); });
     });
+    viewEl.querySelectorAll('[data-again]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var r = find(db().rides, b.getAttribute('data-again'));
+        if (!r) return;
+        s.type = r.type;
+        s.pickup = r.pickup || '';
+        s.destination = r.destination || '';
+        s.stops = (r.stops || []).slice();
+        s.ret = !!r.returnRide;
+        if (r.proxy && r.proxy.name) { s.proxy = true; s.proxyName = r.proxy.name; s.proxyOk = true; }
+        else { s.proxy = false; s.riders = r.riders || 1; }
+        s.step = 2;
+        CWA.render();
+      });
+    });
     viewEl.querySelectorAll('[data-day]').forEach(function (b) {
       b.addEventListener('click', function () { s.day = b.getAttribute('data-day'); CWA.render(); });
     });
@@ -1294,6 +1421,33 @@ CWA.reg({
     if (confirmB) confirmB.addEventListener('click', confirmBooking);
   }
 
+  /* Shared by the post-booking confirmation and the ride detail page.
+     redirectHash: where to send the passenger afterwards — needed on the
+     booked-confirmation screen, since it doesn't know how to display a
+     ride it just found out is cancelled; the ride detail page just
+     re-renders itself in place via the store's cwa:change listener. */
+  function openCancelModal(id, redirectHash) {
+    var m = CWA.ui.modal(
+      '<div class="stack-lg">' +
+      '<div class="display display-sm">' + esc(t('pax.cancelQ')) + '</div>' +
+      '<button type="button" class="btn btn-destructive btn-xl btn-block" id="cancel-yes">' + esc(t('pax.cancelYes')) + '</button>' +
+      '<button type="button" class="btn btn-outline btn-xl btn-block" data-close>' + esc(t('pax.cancelKeep')) + '</button>' +
+      '</div>');
+    m.el.querySelector('#cancel-yes').addEventListener('click', function () {
+      CWA.store.update(function (dd) {
+        var r = find(dd.rides, id);
+        if (!r) return;
+        r.status = 'cancelled';
+        var when = CWA.fmt.rideWhen(r);
+        CWA.store.notify(dd, 'admin', 'notif.cancelled', { name: session.name, when: when }, '#rides/' + id);
+        if (r.pilotId) CWA.store.notify(dd, 'pilot', 'notif.cancelled', { name: session.name, when: when }, '#feed');
+      });
+      m.close();
+      CWA.ui.toast(t('pax.cancelledToast'), 'info');
+      if (redirectHash) CWA.nav(redirectHash);
+    });
+  }
+
   /* ============================= #booked/<id> ============================= */
   function booked(id) {
     lastView = 'booked';
@@ -1318,7 +1472,11 @@ CWA.reg({
       '<div class="stack reveal" style="--i:3">' +
       heroBtn('data-nav="#ride/' + esc(ride.id) + '"', t('common.details'), '', 'arrowRight') +
       '<button type="button" class="btn btn-outline btn-xl btn-block" data-nav="#home">' + esc(t('pax.backHome')) + '</button>' +
+      '<button type="button" class="small muted center" style="padding:.5rem" id="booked-cancel">' + esc(t('pax.cancelRide')) + '</button>' +
       '</div></div>');
+
+    var bookedCancel = viewEl.querySelector('#booked-cancel');
+    if (bookedCancel) bookedCancel.addEventListener('click', function () { openCancelModal(id, '#rides'); });
   }
 
   /* ================================ #rides ================================ */
@@ -1443,26 +1601,7 @@ CWA.reg({
       '</div>');
 
     var cancelBtn = viewEl.querySelector('#ride-cancel');
-    if (cancelBtn) cancelBtn.addEventListener('click', function () {
-      var m = CWA.ui.modal(
-        '<div class="stack-lg">' +
-        '<div class="display display-sm">' + esc(t('pax.cancelQ')) + '</div>' +
-        '<button type="button" class="btn btn-destructive btn-xl btn-block" id="cancel-yes">' + esc(t('pax.cancelYes')) + '</button>' +
-        '<button type="button" class="btn btn-outline btn-xl btn-block" data-close>' + esc(t('pax.cancelKeep')) + '</button>' +
-        '</div>');
-      m.el.querySelector('#cancel-yes').addEventListener('click', function () {
-        CWA.store.update(function (dd) {
-          var r = find(dd.rides, id);
-          if (!r) return;
-          r.status = 'cancelled';
-          var when = CWA.fmt.rideWhen(r);
-          CWA.store.notify(dd, 'admin', 'notif.cancelled', { name: session.name, when: when }, '#rides/' + id);
-          if (r.pilotId) CWA.store.notify(dd, 'pilot', 'notif.cancelled', { name: session.name, when: when }, '#feed');
-        });
-        m.close();
-        CWA.ui.toast(t('pax.cancelledToast'), 'info');
-      });
-    });
+    if (cancelBtn) cancelBtn.addEventListener('click', function () { openCancelModal(id); });
   }
 
   /* ================================ #chats ================================ */
@@ -1651,7 +1790,7 @@ CWA.reg({
       /* (d) settings */
       '<div class="card stack reveal" style="--i:3">' +
       '<div class="eyebrow">' + esc(t('common.settings')) + '</div>' +
-      '<div class="between"><span>' + esc(t('common.language')) + '</span>' + ui.langSeg() + '</div>' +
+      '<div class="between"><span>' + esc(t('common.language')) + '</span>' + ui.langMenu() + '</div>' +
       '<div class="between"><div><div>' + esc(t('common.notifications')) + '</div>' +
       '<div class="hint">' + esc(t('pax.notifsHint')) + '</div></div>' +
       '<label class="switch"><input type="checkbox" id="prof-notifs"' + (notifsOn ? ' checked' : '') + '>' +
