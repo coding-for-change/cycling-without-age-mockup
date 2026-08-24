@@ -1847,7 +1847,7 @@ CWA.reg({
     /* settings */
     html += '<div class="card stack reveal" style="--i:6">' +
       '<div class="eyebrow">' + esc(t('common.settings')) + '</div>' +
-      '<div class="between"><span>' + esc(t('common.language')) + '</span>' + ui.langSeg() + '</div>' +
+      '<div class="between"><span>' + esc(t('common.language')) + '</span>' + ui.langMenu() + '</div>' +
       '<div class="between"><div class="grow"><div>' + esc(t('common.notifications')) + '</div>' +
       '<div class="hint">' + esc(t('pilot.profile.notifHint')) + '</div></div>' +
       '<label class="switch"><input type="checkbox" id="notif-sw"' + (notifOn ? ' checked' : '') + '>' +

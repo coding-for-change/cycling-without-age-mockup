@@ -3,7 +3,7 @@
    so the demo always has live rides and alerts. */
 (function () {
   const KEY = 'cwa.db.v1';
-  const VERSION = 4;
+  const VERSION = 5;
   let db = null;
 
   /* ---- time helpers: local date at +dayOffset days, hh:mm ---- */
@@ -113,6 +113,15 @@
       trishawId: 't1', pilotId: 'p1', notes: 'Doctor appointment at 10:15. Booked by daughter Sabine.',
       debrief: null, createdAt: now - 3 * 864e5
     });
+    // Staffed pleasure ride for Maria in 2 days → lets Maria test the chat as a passenger
+    s.rides.push({
+      id: 'r-maria', chapterId: 'muc', type: 'pleasure', status: 'staffed',
+      clientId: 'c1', source: 'app',
+      ts: at(2, 14, 0), slot: 'exact', durationMin: 60, riders: 1,
+      pickup: 'Agnes-Bernauer-Str. 12', stops: [], returnRide: false,
+      trishawId: 't2', pilotId: 'p1', notes: 'Maria enjoys the river route along the Isar.',
+      debrief: null, createdAt: now - 864e5
+    });
     // Group event at the nursing home in 3 days, 5 of 8 slots filled, second trishaw needs a pilot
     s.rides.push({
       id: 'r-event', chapterId: 'muc', type: 'event', status: 'open',
@@ -217,13 +226,22 @@
       });
     }
 
-    /* --- chat for the staffed ride --- */
+    /* --- chat for the staffed rides --- */
     s.chats.push({
       id: 'chat-r-func', rideId: 'r-func',
       messages: [
         { from: 'system', name: '', text: '', tKey: 'chat.sysCreated', ts: now - 3 * 864e5 },
         { from: 'pilot', name: 'Jonas Weber', text: 'Hello Mr Brandt! I am Jonas, your pilot for Friday. I will ring the doorbell at 9:30.', ts: now - 26 * 36e5 },
         { from: 'client', name: 'Sabine Brandt', text: 'Thank you Jonas! My father is really looking forward to it. He will bring a blanket.', ts: now - 24 * 36e5 }
+      ]
+    });
+    s.chats.push({
+      id: 'chat-r-maria', rideId: 'r-maria',
+      messages: [
+        { from: 'system', name: '', text: '', tKey: 'chat.sysCreated', ts: now - 864e5 },
+        { from: 'pilot', name: 'Jonas Weber', text: 'Hello Maria! I am Jonas, your pilot for Sunday. Looking forward to our Isar ride — I will be at your door at 14:00.', ts: now - 10 * 36e5 },
+        { from: 'client', name: 'Maria Huber', text: 'Wonderful, Jonas! I will be ready. Can we stop at the bench near the bridge?', ts: now - 8 * 36e5 },
+        { from: 'pilot', name: 'Jonas Weber', text: 'Of course — that is one of my favourite spots too. See you then!', ts: now - 7 * 36e5 }
       ]
     });
 

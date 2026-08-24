@@ -102,20 +102,45 @@
     lastRouteKey = key;
   };
 
-  /* Global delegation: data-nav → navigate, data-lang → switch language */
+  /* Global delegation: data-nav → navigate, data-lang-toggle → open/close the
+     language dropdown, data-lang → switch language. Any other click closes
+     an open dropdown (outside-click dismiss). */
   document.addEventListener('click', function (e) {
     const nav = e.target.closest('[data-nav]');
     if (nav) { CWA.nav(nav.getAttribute('data-nav')); return; }
+    const toggle = e.target.closest('[data-lang-toggle]');
+    if (toggle) {
+      const menu = toggle.closest('.lang-menu');
+      const wasOpen = menu.classList.contains('open');
+      document.querySelectorAll('.lang-menu.open').forEach(function (m) { m.classList.remove('open'); });
+      if (!wasOpen) menu.classList.add('open');
+      return;
+    }
     const lang = e.target.closest('[data-lang]');
-    if (lang) { CWA.setLang(lang.getAttribute('data-lang')); }
+    if (lang) { CWA.setLang(lang.getAttribute('data-lang')); return; }
+    document.querySelectorAll('.lang-menu.open').forEach(function (m) { m.classList.remove('open'); });
   });
 
   /* ---------- component builders (return HTML strings) ---------- */
-  CWA.ui.langSeg = function (cls) {
-    return '<div class="seg ' + (cls || '') + '" role="group" aria-label="Language">' +
-      ['en', 'de', 'da'].map(function (l) {
-        return '<button type="button" data-lang="' + l + '" class="' + (CWA.lang === l ? 'active' : '') + '">' + l.toUpperCase() + '</button>';
-      }).join('') + '</div>';
+  const LANGS = [
+    { code: 'en', flag: '🇬🇧', name: 'English' },
+    { code: 'de', flag: '🇩🇪', name: 'Deutsch' },
+    { code: 'da', flag: '🇩🇰', name: 'Dansk' }
+  ];
+  /* Language switcher: a flag + code trigger that opens a dropdown of
+     flag + native-name options. Always meant to sit top-right of its screen. */
+  CWA.ui.langMenu = function (cls) {
+    const cur = LANGS.filter(function (l) { return l.code === CWA.lang; })[0] || LANGS[0];
+    return '<div class="lang-menu ' + (cls || '') + '">' +
+      '<button type="button" class="lang-menu-btn" data-lang-toggle aria-haspopup="listbox" aria-label="' + esc(CWA.t('common.language')) + '">' +
+      '<span class="lang-flag">' + cur.flag + '</span><span>' + cur.code.toUpperCase() + '</span>' +
+      CWA.icon('chevronDown') + '</button>' +
+      '<div class="lang-menu-list" role="listbox">' +
+      LANGS.map(function (l) {
+        return '<button type="button" class="lang-menu-item' + (l.code === CWA.lang ? ' active' : '') + '" data-lang="' + l.code + '" role="option">' +
+          '<span class="lang-flag">' + l.flag + '</span><span class="grow">' + esc(l.name) + '</span>' +
+          (l.code === CWA.lang ? CWA.icon('check') : '') + '</button>';
+      }).join('') + '</div></div>';
   };
 
   /* On the v3 mobile apps this hands off to the generated (per-person coloured)
@@ -184,15 +209,14 @@
       }).join('') +
       '<div class="sidebar-footer"><div class="row">' + CWA.ui.avatar(o.userName) +
       '<div class="grow"><div class="small medium truncate">' + esc(o.userName) + '</div>' +
-      '<div class="tiny muted truncate">' + esc(o.userRole || '') + '</div></div>' +
-      CWA.ui.langSeg() + '</div></div>' +
+      '<div class="tiny muted truncate">' + esc(o.userRole || '') + '</div></div></div></div>' +
       '</aside>';
 
     const inset =
       '<div class="inset"><header class="inset-header">' +
       '<a class="icon-btn hide-desktop" href="index.html" aria-label="Home">' + CWA.icon('chevronLeft') + '</a>' +
       '<div class="breadcrumb grow">' + esc(o.breadcrumbRoot) + '<span class="muted">&rsaquo;</span> <span class="current" id="crumb"></span></div>' +
-      '<span class="hide-desktop">' + CWA.ui.langSeg() + '</span>' +
+      CWA.ui.langMenu() +
       '</header><div class="inset-body"><div class="page" id="view"></div></div></div>';
 
     document.body.innerHTML = '<div class="shell">' + side + inset + '</div>' +

@@ -1151,18 +1151,20 @@ CWA.reg({
     const foot = qs('.sidebar-footer');
     if (foot) {
       foot.innerHTML =
-        '<div class="stack-sm"><button type="button" class="record-card" id="role-switch">' +
+        '<button type="button" class="record-card" id="role-switch">' +
         '<div class="row">' + CWA.ui.avatar(me()) +
         '<div class="grow"><div class="small medium truncate">' + esc(me()) + '</div>' +
         '<div class="tiny muted truncate">' + esc(t(ROLES[role()].roleKey)) + '</div></div>' +
-        icon('chevronDown') + '</div></button>' +
-        CWA.ui.langSeg() + '</div>';
+        icon('chevronDown') + '</div></button>';
       qs('#role-switch', foot).addEventListener('click', openRoleModal);
     }
-    /* … and a header avatar button so the switch is reachable on mobile too */
+    /* … and a header avatar button so the switch is reachable on mobile too.
+       Inserted before the (always-visible) language dropdown, which stays
+       the rightmost, top-right corner control. */
     const hdr = qs('.inset-header');
-    if (hdr) {
-      hdr.insertAdjacentHTML('beforeend',
+    const hdrLangMenu = hdr && qs('.lang-menu', hdr);
+    if (hdr && hdrLangMenu) {
+      hdrLangMenu.insertAdjacentHTML('beforebegin',
         '<button type="button" class="icon-btn hide-desktop" id="role-switch-m" aria-label="' +
         esc(t('admin.switchRole')) + '">' + icon('user') + '</button>');
       qs('#role-switch-m', hdr).addEventListener('click', openRoleModal);

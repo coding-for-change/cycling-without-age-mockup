@@ -97,7 +97,7 @@ CWA.reg({
       '<div class="row">' + CWA.ui.brandDot() +
       '<div><div class="hero-head-title">' + esc(t('brand')) + '</div>' +
       '<div class="hero-head-sub">' + esc(t('idx.kicker')) + '</div></div></div>' +
-      CWA.ui.langSeg() +
+      CWA.ui.langMenu() +
       '</div>' +
 
       '<div class="launch-hero reveal">' +

@@ -106,7 +106,7 @@ CWA.reg({
       '<div class="between">' +
       '<a class="icon-btn" href="index.html" aria-label="' + esc(t('common.back')) + '">' + icon('chevronLeft') + '</a>' +
       '<div class="h2">' + esc(t('wa.title')) + '</div>' +
-      CWA.ui.langSeg() +
+      CWA.ui.langMenu() +
       '</div>' +
       '<p class="small muted center">' + esc(t('wa.explainer')) + '</p>' +
       '<div class="phone-frame">' +
